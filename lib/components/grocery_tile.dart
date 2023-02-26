@@ -22,8 +22,8 @@ class GroceryTile extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 10,
-              height: 60,
+              width: 6,
+              height: 80,
               color: groceryItem.color,
             ),
             const SizedBox(
