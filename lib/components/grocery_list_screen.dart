@@ -9,18 +9,23 @@ class GroceryListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final groceryList = Provider.of<GroceryManager>(context).groceryItems;
+    final groceryManager = Provider.of<GroceryManager>(context);
 
     return ListView.separated(
         padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
-          return GroceryTile(groceryItem: groceryList[index]);
+          return GroceryTile(
+            groceryItem: groceryManager.groceryItems[index],
+            onComplete: (checked) {
+              groceryManager.toggleItemStatus(index, checked ?? false);
+            },
+          );
         },
         separatorBuilder: (context, index) {
           return const SizedBox(
             height: 8,
           );
         },
-        itemCount: groceryList.length);
+        itemCount: groceryManager.groceryItems.length);
   }
 }

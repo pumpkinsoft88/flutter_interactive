@@ -5,10 +5,14 @@ import 'package:intl/intl.dart';
 import '../models/models.dart';
 
 class GroceryTile extends StatelessWidget {
-  const GroceryTile({super.key, required this.groceryItem, this.onComplete});
+  GroceryTile({super.key, required this.groceryItem, this.onComplete})
+      : textDecoration = groceryItem.isComplete
+            ? TextDecoration.lineThrough
+            : TextDecoration.none;
 
   final GroceryItem groceryItem;
   final void Function(bool?)? onComplete;
+  final TextDecoration textDecoration;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +34,18 @@ class GroceryTile extends StatelessWidget {
               children: [
                 Text(
                   groceryItem.name,
-                  style: Theme.of(context).textTheme.headline6,
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(decoration: textDecoration),
                 ),
                 const SizedBox(
                   height: 4,
                 ),
-                Text(DateFormat('MMMM dd h:mm a').format(groceryItem.date)),
+                Text(
+                  DateFormat('MMMM dd h:mm a').format(groceryItem.date),
+                  style: TextStyle(decoration: textDecoration),
+                ),
                 const SizedBox(
                   height: 4,
                 ),
@@ -48,8 +58,10 @@ class GroceryTile extends StatelessWidget {
           children: [
             Text(
               groceryItem.quantity.toString(),
-              style:
-                  Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 24),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1!
+                  .copyWith(fontSize: 20, decoration: textDecoration),
             ),
             Checkbox(value: groceryItem.isComplete, onChanged: onComplete)
           ],
@@ -61,13 +73,19 @@ class GroceryTile extends StatelessWidget {
   Widget buildImportance() {
     switch (groceryItem.importance) {
       case Importance.low:
-        return const Text('low', style: TextStyle(fontWeight: FontWeight.w200));
+        return Text('low',
+            style: TextStyle(
+                fontWeight: FontWeight.w200, decoration: textDecoration));
       case Importance.medium:
-        return const Text('medium',
-            style: TextStyle(fontWeight: FontWeight.w600));
+        return Text('medium',
+            style: TextStyle(
+                fontWeight: FontWeight.w600, decoration: textDecoration));
       case Importance.high:
-        return const Text('high',
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.red));
+        return Text('high',
+            style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: Colors.red,
+                decoration: textDecoration));
       default:
         throw Exception('There is no such importance value');
     }
