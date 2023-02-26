@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import '../models/models.dart';
 
 class GroceryTile extends StatelessWidget {
-  const GroceryTile({super.key, required this.groceryItem});
+  const GroceryTile({super.key, required this.groceryItem, this.onComplete});
 
   final GroceryItem groceryItem;
+  final void Function(bool?)? onComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class GroceryTile extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                Text(DateFormat.yMMMMEEEEd().add_Hm().format(groceryItem.date)),
+                Text(DateFormat('MMMM dd h:mm a').format(groceryItem.date)),
                 const SizedBox(
                   height: 4,
                 ),
@@ -45,8 +46,12 @@ class GroceryTile extends StatelessWidget {
         ),
         Row(
           children: [
-            Text(groceryItem.quantity.toString()),
-            Checkbox(value: false, onChanged: (checked) {})
+            Text(
+              groceryItem.quantity.toString(),
+              style:
+                  Theme.of(context).textTheme.bodyText1!.copyWith(fontSize: 24),
+            ),
+            Checkbox(value: groceryItem.isComplete, onChanged: onComplete)
           ],
         ),
       ],

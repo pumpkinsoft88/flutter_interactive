@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import '../fooderlich_theme.dart';
 import '../models/models.dart';
 import 'grocery_tile.dart';
 
@@ -71,41 +72,60 @@ class GroceryItemScreenState extends State<GroceryItemScreen> {
   @override
   Widget build(BuildContext context) {
     // TODO: Add GroceryItemScreen Scaffold
-    return Scaffold(
-        appBar: AppBar(
-          actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.check))
-          ],
-          elevation: 0.0,
-          title: Text(
-            'Grocery Item',
-            style: Theme.of(context).textTheme.headline6!.copyWith(
-                fontFamily: GoogleFonts.lemon().fontFamily,
-                fontWeight: FontWeight.w200),
+    return Theme(
+      data: FooderlichTheme.dark(),
+      child: Scaffold(
+          appBar: AppBar(
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    final groceryItem = GroceryItem(
+                        id: widget.originalItem?.id ?? const Uuid().v1(),
+                        name: _nameController.text,
+                        importance: importance,
+                        color: _currentColor,
+                        quantity: _currentSliderValue.toInt(),
+                        date: DateTime(_dueDate.year, _dueDate.month,
+                            _dueDate.day, _timeOfDay.hour, _timeOfDay.minute));
+                    if (widget.isUpdating) {
+                      widget.onUpdate(groceryItem);
+                    } else {
+                      widget.onCreate(groceryItem);
+                    }
+                  },
+                  icon: const Icon(Icons.check))
+            ],
+            elevation: 0.0,
+            title: Text(
+              'Grocery Item',
+              style: Theme.of(context).textTheme.headline6!.copyWith(
+                  fontFamily: GoogleFonts.lemon().fontFamily,
+                  fontWeight: FontWeight.w200),
+            ),
           ),
-        ),
-        body: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            buildNameField(),
-            buildImportanceField(),
-            buildDateField(),
-            buildTimeField(),
-            buildColorPicker(),
-            buildQuantityField(),
-            GroceryTile(
-              groceryItem: GroceryItem(
-                id: 'asdf',
-                name: name,
-                importance: importance,
-                color: _currentColor,
-                date: DateTime(_dueDate.year, _dueDate.month, _dueDate.day,
-                    _timeOfDay.hour, _timeOfDay.minute),
-                quantity: _currentSliderValue.toInt(),
-              ),
-            )
-          ],
-        ));
+          body: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              buildNameField(),
+              buildImportanceField(),
+              buildDateField(),
+              buildTimeField(),
+              buildColorPicker(),
+              buildQuantityField(),
+              GroceryTile(
+                groceryItem: GroceryItem(
+                  id: 'asdf',
+                  name: name,
+                  importance: importance,
+                  color: _currentColor,
+                  date: DateTime(_dueDate.year, _dueDate.month, _dueDate.day,
+                      _timeOfDay.hour, _timeOfDay.minute),
+                  quantity: _currentSliderValue.toInt(),
+                ),
+              )
+            ],
+          )),
+    );
   }
 
   // TODO: Add buildNameField()
