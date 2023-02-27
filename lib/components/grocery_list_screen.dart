@@ -15,11 +15,15 @@ class GroceryListScreen extends StatelessWidget {
     return ListView.separated(
         padding: const EdgeInsets.all(16),
         itemBuilder: (context, index) {
+          final item = groceryManager.groceryItems[index];
           return Dismissible(
-            key: Key(groceryManager.groceryItems[index].id),
+            key: Key(item.id),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) {
               groceryManager.deleteItem(index);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('${item.name} is removed!'),
+              ));
             },
             background: Container(
               color: Colors.red,
@@ -43,13 +47,12 @@ class GroceryListScreen extends StatelessWidget {
                                   groceryManager.updateItem(groceryItem, index);
                                   Navigator.pop(context);
                                 },
-                                originalItem:
-                                    groceryManager.groceryItems[index],
+                                originalItem: item,
                               ),
                             )));
               },
               child: GroceryTile(
-                groceryItem: groceryManager.groceryItems[index],
+                groceryItem: item,
                 onComplete: (checked) {
                   groceryManager.toggleItemStatus(index, checked ?? false);
                 },
